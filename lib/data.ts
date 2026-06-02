@@ -472,10 +472,10 @@ export const brands = ["Apple", "Samsung", "Sony", "LG", "Xiaomi", "Dell", "HP",
 export const testimonials = [
   {
     id: 1,
-    name: "Jean-Pierre Habimana",
+    name: "Gatete David",
     location: "Founder & CEO",
     rating: 5,
-    text: "Incredible service! Got my MacBook Pro delivered same day. The quality is genuine and the prices are the best in Musanze. UMUVUMU is my go-to for all electronics.",
+    text: "UMUVUMU represents our commitment to revolutionizing electronics retail in Musanze. We've built this platform with genuine, high-quality products at competitive prices, ensuring every customer receives authentic devices with exceptional service. Our mission is to make premium electronics accessible while maintaining trust and reliability—that's the foundation of our business.",
     product: "MacBook Pro M3",
     avatar: "/David.png"
   },
