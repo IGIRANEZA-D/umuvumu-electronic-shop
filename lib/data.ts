@@ -5,7 +5,7 @@ import { z } from 'zod';
  * Ensuring data integrity for a world-class storefront
  */
 export const ProductSchema = z.object({
-  id: z.number(),
+  id: z.union([z.number(), z.string()]),
   slug: z.string(), // SEO friendly identifier
   name: z.string().min(1),
   price: z.number().positive(),
@@ -16,14 +16,26 @@ export const ProductSchema = z.object({
   reviews: z.number().int(),
   badge: z.enum(['New', 'Hot', 'Sale', 'Best Seller']).optional(),
   description: z.string(),
-  specs: z.record(z.string(), z.string()),
+  specs: z.array(z.object({
+    label: z.string(),
+    value: z.string()
+  })),
   inStock: z.boolean(),
   brand: z.string(),
   discountPercentage: z.number().optional(),
+  priceRange: z.object({
+    min: z.number(),
+    max: z.number()
+  }).optional(),
 });
 
+export interface PriceRange {
+  min: number;
+  max: number;
+}
+
 export interface Product {
-  id: number;
+  id: number | string;
   slug: string;
   name: string;
   price: number;
@@ -34,10 +46,11 @@ export interface Product {
   reviews: number;
   badge?: 'New' | 'Hot' | 'Sale' | 'Best Seller';
   description: string;
-  specs: Record<string, string>;
+  specs: { label: string; value: string }[];
   inStock: boolean;
   brand: string;
   discountPercentage?: number;
+  priceRange?: PriceRange;
 }
 
 export interface Category {
@@ -63,6 +76,24 @@ const calculateDiscount = (price: number, original?: number) => {
   return Math.round(((original - price) / original) * 100);
 };
 
+/**
+ * Calculate negotiable price range for products
+ * Min: 40% of price | Max: 120% of price
+ */
+const calculatePriceRange = (price: number): PriceRange => ({
+  min: Math.round(price * 0.4),
+  max: Math.round(price * 1.2)
+});
+
+/**
+ * Generate WhatsApp message URL with pre-filled inquiry
+ */
+export const generateWhatsAppLink = (productName: string, minPrice: number, maxPrice: number, phoneNumber: string = "250781277413"): string => {
+  const message = `Hi UMUVUMU, I'm interested in *${productName}*. Can we negotiate the price? (Range: ${formatPrice(minPrice)} - ${formatPrice(maxPrice)} RWF)`;
+  const encodedMessage = encodeURIComponent(message);
+  return `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+};
+
 // Using Unsplash for high-quality images
 export const products: Product[] = [
   {
@@ -80,10 +111,18 @@ export const products: Product[] = [
     reviews: 284,
     badge: "Hot",
     description: "Experience the pinnacle of mobile technology with Apple's most advanced iPhone yet. Titanium design, A17 Pro chip, and a revolutionary camera system.",
-    specs: { "Storage": "256GB", "RAM": "8GB", "Display": "6.7\" Super Retina XDR", "Battery": "4422mAh", "Camera": "48MP Triple", "OS": "iOS 17" },
+    specs: [
+      { label: "Storage", value: "256GB" },
+      { label: "RAM", value: "8GB" },
+      { label: "Display", value: "6.7\" Super Retina XDR" },
+      { label: "Battery", value: "4422mAh" },
+      { label: "Camera", value: "48MP Triple" },
+      { label: "OS", value: "iOS 17" }
+    ],
     inStock: true,
     brand: "Apple",
-    discountPercentage: calculateDiscount(1299000, 1450000)
+    discountPercentage: calculateDiscount(1299000, 1450000),
+    priceRange: calculatePriceRange(1299000)
   },
   {
     id: 2,
@@ -97,10 +136,18 @@ export const products: Product[] = [
     reviews: 312,
     badge: "New",
     description: "Galaxy AI is here. Featuring the most powerful Samsung processor, an advanced 200MP camera, and integrated S Pen for unlimited creativity.",
-    specs: { "Storage": "512GB", "RAM": "12GB", "Display": "6.8\" Dynamic AMOLED 2X", "Battery": "5000mAh", "Camera": "200MP Quad", "OS": "Android 14" },
+    specs: [
+      { label: "Storage", value: "512GB" },
+      { label: "RAM", value: "12GB" },
+      { label: "Display", value: "6.8\" Dynamic AMOLED 2X" },
+      { label: "Battery", value: "5000mAh" },
+      { label: "Camera", value: "200MP Quad" },
+      { label: "OS", value: "Android 14" }
+    ],
     inStock: true,
     brand: "Samsung",
-    discountPercentage: calculateDiscount(1199000, 1350000)
+    discountPercentage: calculateDiscount(1199000, 1350000),
+    priceRange: calculatePriceRange(1199000)
   },
   {
     id: 3,
@@ -113,9 +160,17 @@ export const products: Product[] = [
     reviews: 189,
     badge: "Best Seller",
     description: "The most powerful MacBook Pro ever. Built for demanding workflows with the M3 Pro chip, Liquid Retina XDR display, and 22-hour battery life.",
-    specs: { "Chip": "Apple M3 Pro", "RAM": "18GB", "Storage": "512GB SSD", "Display": "14.2\" Liquid Retina XDR", "Battery": "22 hrs", "Ports": "3x Thunderbolt 4" },
+    specs: [
+      { label: "Chip", value: "Apple M3 Pro" },
+      { label: "RAM", value: "18GB" },
+      { label: "Storage", value: "512GB SSD" },
+      { label: "Display", value: "14.2\" Liquid Retina XDR" },
+      { label: "Battery", value: "22 hrs" },
+      { label: "Ports", value: "3x Thunderbolt 4" }
+    ],
     inStock: true,
-    brand: "Apple"
+    brand: "Apple",
+    priceRange: calculatePriceRange(2199000)
   },
   {
     id: 4,
@@ -129,10 +184,18 @@ export const products: Product[] = [
     reviews: 143,
     badge: "Sale",
     description: "Premium performance with a stunning OLED display. The Dell XPS 15 delivers incredible visuals and professional-grade power in a sleek aluminum chassis.",
-    specs: { "CPU": "Intel Core i9-13900H", "RAM": "32GB DDR5", "Storage": "1TB NVMe", "Display": "15.6\" OLED 3.5K", "GPU": "RTX 4060", "Battery": "86Whr" },
+    specs: [
+      { label: "CPU", value: "Intel Core i9-13900H" },
+      { label: "RAM", value: "32GB DDR5" },
+      { label: "Storage", value: "1TB NVMe" },
+      { label: "Display", value: "15.6\" OLED 3.5K" },
+      { label: "GPU", value: "RTX 4060" },
+      { label: "Battery", value: "86Whr" }
+    ],
     inStock: true,
     brand: "Dell",
-    discountPercentage: calculateDiscount(1799000, 1999000)
+    discountPercentage: calculateDiscount(1799000, 1999000),
+    priceRange: calculatePriceRange(1799000)
   },
   {
     id: 5,
@@ -146,10 +209,18 @@ export const products: Product[] = [
     reviews: 97,
     badge: "Sale",
     description: "Quantum dot technology meets Neo QLED precision. Experience brilliant colors, deep contrast, and Dolby Atmos sound in this flagship television.",
-    specs: { "Size": "65 inches", "Resolution": "4K Ultra HD", "HDR": "Quantum HDR 32X", "Sound": "2.2.2ch 60W", "Smart": "Tizen OS", "Refresh": "120Hz" },
+    specs: [
+      { label: "Size", value: "65 inches" },
+      { label: "Resolution", value: "4K Ultra HD" },
+      { label: "HDR", value: "Quantum HDR 32X" },
+      { label: "Sound", value: "2.2.2ch 60W" },
+      { label: "Smart", value: "Tizen OS" },
+      { label: "Refresh", value: "120Hz" }
+    ],
     inStock: true,
     brand: "Samsung",
-    discountPercentage: calculateDiscount(1499000, 1799000)
+    discountPercentage: calculateDiscount(1499000, 1799000),
+    priceRange: calculatePriceRange(1499000)
   },
   {
     id: 6,
@@ -163,10 +234,18 @@ export const products: Product[] = [
     reviews: 567,
     badge: "Best Seller",
     description: "Industry-leading noise cancellation with 8 microphones. 30-hour battery, Multipoint connection, and Sony's best-ever sound quality.",
-    specs: { "Type": "Over-ear", "ANC": "8-mic array", "Battery": "30 hours", "Connectivity": "Bluetooth 5.2", "Codec": "LDAC, AAC, SBC", "Weight": "250g" },
+    specs: [
+      { label: "Type", value: "Over-ear" },
+      { label: "ANC", value: "8-mic array" },
+      { label: "Battery", value: "30 hours" },
+      { label: "Connectivity", value: "Bluetooth 5.2" },
+      { label: "Codec", value: "LDAC, AAC, SBC" },
+      { label: "Weight", value: "250g" }
+    ],
     inStock: true,
     brand: "Sony",
-    discountPercentage: calculateDiscount(399000, 450000)
+    discountPercentage: calculateDiscount(399000, 450000),
+    priceRange: calculatePriceRange(399000)
   },
   {
     id: 7,
@@ -179,9 +258,17 @@ export const products: Product[] = [
     reviews: 445,
     badge: "Hot",
     description: "Experience lightning-fast loading with the PS5's custom SSD, haptic feedback with the DualSense controller, and breathtaking 4K graphics.",
-    specs: { "GPU": "10.28 TFLOPS RDNA 2", "CPU": "Zen 2 3.5GHz", "Storage": "825GB SSD", "Resolution": "Up to 8K", "FPS": "Up to 120fps", "Ray Tracing": "Yes" },
+    specs: [
+      { label: "GPU", value: "10.28 TFLOPS RDNA 2" },
+      { label: "CPU", value: "Zen 2 3.5GHz" },
+      { label: "Storage", value: "825GB SSD" },
+      { label: "Resolution", value: "Up to 8K" },
+      { label: "FPS", value: "Up to 120fps" },
+      { label: "Ray Tracing", value: "Yes" }
+    ],
     inStock: true,
-    brand: "Sony"
+    brand: "Sony",
+    priceRange: calculatePriceRange(549000)
   },
   {
     id: 8,
@@ -198,7 +285,8 @@ export const products: Product[] = [
     specs: { "Chip": "S9 SiP", "Display": "Always-On Retina", "Water": "50m WR", "Health": "ECG + Blood O2", "Battery": "18 hours", "GPS": "L1 + L5" },
     inStock: true,
     brand: "Apple",
-    discountPercentage: calculateDiscount(479000, 529000)
+    discountPercentage: calculateDiscount(479000, 529000),
+    priceRange: calculatePriceRange(479000)
   },
   {
     id: 9,
@@ -215,7 +303,8 @@ export const products: Product[] = [
     specs: { "Power": "100W", "Battery": "15 hours", "Waterproof": "IP67", "Bluetooth": "5.1", "Ports": "USB-A charging", "Weight": "1.9kg" },
     inStock: true,
     brand: "JBL",
-    discountPercentage: calculateDiscount(349000, 399000)
+    discountPercentage: calculateDiscount(349000, 399000),
+    priceRange: calculatePriceRange(349000)
   },
   {
     id: 10,
@@ -230,7 +319,8 @@ export const products: Product[] = [
     description: "The ultimate iPad experience with the M2 chip, Liquid Retina XDR display with ProMotion, and Apple Pencil hover capability.",
     specs: { "Chip": "Apple M2", "Display": "12.9\" Liquid Retina XDR", "Storage": "256GB", "Camera": "12MP Wide + 10MP Ultra Wide", "Connectivity": "WiFi 6E", "Battery": "10 hours" },
     inStock: true,
-    brand: "Apple"
+    brand: "Apple",
+    priceRange: calculatePriceRange(1099000)
   },
   {
     id: 11,
@@ -247,7 +337,8 @@ export const products: Product[] = [
     specs: { "CPU": "Dimensity 9200+", "RAM": "12GB", "Storage": "256GB", "Camera": "50MP Leica", "Battery": "5000mAh", "Charge": "120W Turbo" },
     inStock: true,
     brand: "Xiaomi",
-    discountPercentage: calculateDiscount(699000, 799000)
+    discountPercentage: calculateDiscount(699000, 799000),
+    priceRange: calculatePriceRange(699000)
   },
   {
     id: 12,
@@ -262,7 +353,8 @@ export const products: Product[] = [
     description: "Dominate every game with RTX 4090 graphics, 240Hz display, and MUX Switch technology. The ultimate weapon for competitive gaming.",
     specs: { "GPU": "RTX 4090 16GB", "CPU": "Intel i9-13950HX", "RAM": "32GB DDR5", "Display": "18\" QHD 240Hz", "Storage": "2TB SSD", "Battery": "90Whr" },
     inStock: true,
-    brand: "ASUS"
+    brand: "ASUS",
+    priceRange: calculatePriceRange(2499000)
   },
   {
     id: 13,
@@ -279,7 +371,8 @@ export const products: Product[] = [
     specs: { "Size": "55 inches", "Panel": "OLED", "Processor": "XR Cognitive", "HDR": "Dolby Vision + HDR10", "Sound": "XR Sound Pro", "OS": "Google TV" },
     inStock: true,
     brand: "Sony",
-    discountPercentage: calculateDiscount(1299000, 1499000)
+    discountPercentage: calculateDiscount(1299000, 1499000),
+    priceRange: calculatePriceRange(1299000)
   },
   {
     id: 14,
@@ -294,7 +387,8 @@ export const products: Product[] = [
     description: "Cinematic sound from a single soundbar. Bose TrueSpace technology, Dolby Atmos, and Bose Spatial Headtracking for true 3D audio.",
     specs: { "Channels": "13 drivers, 9-class amp", "Audio": "Dolby Atmos + DTS:X", "Connectivity": "HDMI eARC, WiFi, BT", "Size": "104.5cm", "Smart": "Voice assistant", "ADAPTiQ": "Yes" },
     inStock: true,
-    brand: "Bose"
+    brand: "Bose",
+    priceRange: calculatePriceRange(899000)
   },
   {
     id: 15,
@@ -309,7 +403,8 @@ export const products: Product[] = [
     description: "The flagship compact mirrorless with 45.7MP stacked CMOS sensor, 8K video, and Nikon's most advanced autofocus system.",
     specs: { "Sensor": "45.7MP BSI Stacked CMOS", "ISO": "64–25600", "Video": "8K30p RAW", "AF Points": "493", "FPS": "20fps RAW", "Battery": "330 shots" },
     inStock: true,
-    brand: "Nikon"
+    brand: "Nikon",
+    priceRange: calculatePriceRange(3499000)
   },
   {
     id: 16,
@@ -324,7 +419,8 @@ export const products: Product[] = [
     description: "The most powerful Xbox ever. True 4K gaming, 120fps, Xbox Game Pass, and Quick Resume let you jump between games instantly.",
     specs: { "CPU": "8x Zen 2 3.8GHz", "GPU": "12 TFLOPS RDNA 2", "RAM": "16GB GDDR6", "Storage": "1TB NVMe SSD", "Optical": "4K UHD Blu-ray", "Resolution": "Up to 8K" },
     inStock: true,
-    brand: "Microsoft"
+    brand: "Microsoft",
+    priceRange: calculatePriceRange(549000)
   },
   {
     id: 17,
@@ -341,7 +437,8 @@ export const products: Product[] = [
     specs: { "Size": "75 inches", "Panel": "QLED", "Resolution": "4K UHD", "OS": "Google TV", "Refresh": "120Hz", "HDR": "Dolby Vision IQ" },
     inStock: true,
     brand: "Xiaomi",
-    discountPercentage: calculateDiscount(1199000, 1399000)
+    discountPercentage: calculateDiscount(1199000, 1399000),
+    priceRange: calculatePriceRange(1199000)
   },
   {
     id: 18,
@@ -356,7 +453,8 @@ export const products: Product[] = [
     description: "Professional aerial photography under 249g. 4K/60fps HDR video, omnidirectional obstacle sensing, and up to 34-minute flight time.",
     specs: { "Weight": "249g", "Video": "4K/60fps HDR", "Camera": "1/1.3\" CMOS", "Range": "20km", "Flight": "34 minutes", "Wind": "Level 6" },
     inStock: true,
-    brand: "DJI"
+    brand: "DJI",
+    priceRange: calculatePriceRange(899000)
   },
   {
     id: 19,
@@ -372,7 +470,9 @@ export const products: Product[] = [
     description: "The world's most compact 150W GaN charger. Charge a MacBook Pro, iPad, and two iPhones simultaneously with ActiveShield temperature management.",
     specs: { "Power": "150W Total", "Ports": "4 (2 USB-C, 2 USB-A)", "Technology": "GaN II", "Safety": "ActiveShield", "Size": "Compact", "Input": "100-240V" },
     inStock: true,
-    brand: "Anker"
+    brand: "Anker",
+    discountPercentage: calculateDiscount(89000, 109000),
+    priceRange: calculatePriceRange(89000)
   },
   {
     id: 20,
@@ -388,7 +488,9 @@ export const products: Product[] = [
     description: "Pocket-sized portable SSD with 1,050MB/s read speed, AES 256-bit encryption, and shock-resistant metal design for data protection anywhere.",
     specs: { "Capacity": "2TB", "Read": "1,050MB/s", "Write": "1,000MB/s", "Interface": "USB 3.2 Gen 2", "Security": "AES 256-bit", "Shock": "1500G" },
     inStock: true,
-    brand: "Samsung"
+    brand: "Samsung",
+    discountPercentage: calculateDiscount(179000, 219000),
+    priceRange: calculatePriceRange(179000)
   },
   {
     id: 21,
@@ -401,9 +503,17 @@ export const products: Product[] = [
     reviews: 167,
     badge: "New",
     description: "Next-gen WiFi 6E router with 6GHz band, 300 Gbps combined speed, and OFDMA technology for lag-free gaming and streaming.",
-    specs: { "Speed": "AXE300", "Bands": "Tri-band 6GHz", "Antennas": "12 High-gain", "Coverage": "6000 sq ft", "Ports": "2.5G WAN + 4x 1G LAN", "Security": "HomeShield Pro" },
+    specs: [
+      { label: "Speed", value: "AXE300" },
+      { label: "Bands", value: "Tri-band 6GHz" },
+      { label: "Antennas", value: "12 High-gain" },
+      { label: "Coverage", value: "6000 sq ft" },
+      { label: "Ports", value: "2.5G WAN + 4x 1G LAN" },
+      { label: "Security", value: "HomeShield Pro" }
+    ],
     inStock: true,
-    brand: "TP-Link"
+    brand: "TP-Link",
+    priceRange: calculatePriceRange(299000)
   },
   {
     id: 22,
@@ -419,7 +529,9 @@ export const products: Product[] = [
     description: "The world's best-selling multi-cooker. Replaces 7 kitchen appliances — pressure cooker, slow cooker, rice cooker, steamer, sauté pan, yogurt maker, and warmer.",
     specs: { "Functions": "7-in-1", "Capacity": "6 Quart", "Programs": "13 Smart", "Material": "Stainless Steel", "Power": "1200W", "Pressure": "15 PSI" },
     inStock: true,
-    brand: "Instant Pot"
+    brand: "Instant Pot",
+    discountPercentage: calculateDiscount(189000, 229000),
+    priceRange: calculatePriceRange(189000)
   },
   {
     id: 23,
@@ -435,7 +547,9 @@ export const products: Product[] = [
     description: "Your smart home control center with a 10\" display, built-in Nest camera, Face Match for personalized results, and brilliant sound.",
     specs: { "Display": "10\" HD touchscreen", "Speaker": "Full-range + tweeter", "Camera": "6.5MP wide-angle", "Smart": "Google Home hub", "Privacy": "Physical camera switch", "Ambient EQ": "Yes" },
     inStock: true,
-    brand: "Google"
+    brand: "Google",
+    discountPercentage: calculateDiscount(229000, 279000),
+    priceRange: calculatePriceRange(229000)
   },
   {
     id: 24,
@@ -450,7 +564,8 @@ export const products: Product[] = [
     description: "The legendary SM7B reimagined with built-in preamp. Perfect for podcasting, streaming, and studio recording with zero background noise.",
     specs: { "Type": "Dynamic cardioid", "Gain": "+28dB built-in preamp", "Response": "50Hz – 20kHz", "Connection": "XLR", "EQ": "High-pass + presence", "Weight": "1.11lbs" },
     inStock: true,
-    brand: "Shure"
+    brand: "Shure",
+    priceRange: calculatePriceRange(449000)
   }
 ];
 
@@ -558,4 +673,21 @@ export const formatPrice = (price: number, locale: string = 'en-RW', currency: s
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(price);
+};
+
+/**
+ * Format price range for display (e.g., "100,000RWF-200,000RWF")
+ */
+export const formatPriceRange = (min: number, max: number): string => {
+  const minFormatted = new Intl.NumberFormat('en-RW', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(min);
+  
+  const maxFormatted = new Intl.NumberFormat('en-RW', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(max);
+  
+  return `${minFormatted}RWF-${maxFormatted}RWF`;
 };

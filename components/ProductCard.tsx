@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Heart, ShoppingCart, Star, Eye } from 'lucide-react';
-import { Product, formatPrice } from '@/lib/data';
+import { Heart, ShoppingCart, Star, Eye, Handshake } from 'lucide-react';
+import { Product, formatPrice, formatPriceRange, generateWhatsAppLink } from '@/lib/data';
 import { useStore } from '@/lib/store';
 import { useState } from 'react';
 
@@ -92,25 +92,29 @@ export default function ProductCard({ product }: ProductCardProps) {
         </Link>
 
         <div className="mt-auto pt-4 flex flex-col gap-3 border-t border-[var(--border-subtle)]">
-          <div className="flex items-baseline gap-2">
-            <span className="price-sm">
-              {formatPrice(product.price)}
-            </span>
-            {product.originalPrice && (
-              <span className="text-10px font-500 text-[var(--text-quaternary)] line-through">
-                {formatPrice(product.originalPrice)}
-              </span>
-            )}
-          </div>
+          {product.priceRange && (
+            <div className="flex flex-col gap-2">
+              <p className="text-[13px] font-bold text-[var(--primary)]">
+                {formatPriceRange(product.priceRange.min, product.priceRange.max)}
+              </p>
+              <p className="text-[var(--primary)] font-bold text-10px flex items-center gap-1.5">
+                <Handshake size={13} strokeWidth={2.5} /> NEGOTIABLE
+              </p>
+            </div>
+          )}
 
-          {/* Add to Cart Button */}
+          {/* Negotiate via WhatsApp Button */}
           <button 
-            disabled={!product.inStock}
-            onClick={() => addToCart(product)}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--text-primary)] py-2.5 text-9px font-700 uppercase tracking-wider text-white transition-all duration-200 hover:bg-[var(--primary)] active:scale-95 disabled:cursor-not-allowed disabled:bg-[var(--bg-secondary)] disabled:text-[var(--text-quaternary)]"
+            onClick={() => {
+              if (product.priceRange) {
+                const whatsappLink = generateWhatsAppLink(product.name, product.priceRange.min, product.priceRange.max);
+                window.open(whatsappLink, '_blank');
+              }
+            }}
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#25D366] py-2.5 text-9px font-700 uppercase tracking-wider text-white transition-all duration-200 hover:bg-[#1ebd57] active:scale-95"
           >
-            <ShoppingCart size={14} />
-            Add
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.949 1.256l-.356.214-3.682-.966.984 3.595-.235.374a9.86 9.86 0 .246 4.876c.666 2.592 2.616 4.957 5.206 6.191.87.458 1.896.68 2.904.68a9.892 9.892 0 003.53-.658l.371-.214 3.746.966-.984-3.595.236-.374a9.86 9.86 0 00-.264-6.849 9.874 9.874 0 00-5.226-5.45zM23.12 0H.88C.39 0 0 .39 0 .88v22.24C0 23.61.39 24 .88 24h22.24c.49 0 .88-.39.88-.88V.88C24 .39 23.61 0 23.12 0Z"/></svg>
+            Negotiate
           </button>
         </div>
       </div>

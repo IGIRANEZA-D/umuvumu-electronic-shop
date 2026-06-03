@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { BadgeCheck, Check, Heart, Package, ShoppingCart, Star } from 'lucide-react';
-import { Product, formatPrice } from '@/lib/data';
+import { BadgeCheck, Check, Heart, Package, ShoppingCart, Star, Handshake } from 'lucide-react';
+import { Product, formatPrice, formatPriceRange, generateWhatsAppLink } from '@/lib/data';
 import { useStore } from '@/lib/store';
 
 interface ProductCardProps {
@@ -44,7 +44,7 @@ export default function ProductCard({ product, index = 0, dark = false }: Produc
     >
       <div className="relative border-b border-[var(--line)] bg-[#f2f0ea]" style={{ aspectRatio: '1 / 0.82' }}>
         <Link href={`/product/${product.id}`} className="absolute inset-0 overflow-hidden">
-        {!imgError ? (
+        {!imgError && product.images?.[0] ? (
           <Image
             src={product.images[0]}
               alt={product.name}
@@ -102,12 +102,16 @@ export default function ProductCard({ product, index = 0, dark = false }: Produc
           </h3>
         </Link>
 
-        <div className="mt-4 flex flex-wrap items-end gap-2">
-          <span className="text-[21px] font-extrabold text-[var(--primary-hover)]">{formatPrice(product.price)}</span>
-          {product.originalPrice && (
-            <span className={`pb-1 text-sm line-through ${dark ? 'text-white/35' : 'text-[var(--faint)]'}`}>{formatPrice(product.originalPrice)}</span>
-          )}
-        </div>
+        {product.priceRange && (
+          <div className="mt-4 flex flex-col gap-2">
+            <p className="text-[13px] font-bold text-[var(--primary)]">
+              {formatPriceRange(product.priceRange.min, product.priceRange.max)}
+            </p>
+            <p className="text-[var(--primary)] font-bold text-xs flex items-center gap-2">
+              <Handshake size={13} strokeWidth={2.5} /> NEGOTIABLE
+            </p>
+          </div>
+        )}
 
         <div className="mt-auto pt-5">
           <div className="mb-4 flex items-center justify-between gap-3">
@@ -126,12 +130,16 @@ export default function ProductCard({ product, index = 0, dark = false }: Produc
               Details
             </Link>
             <button
-              onClick={() => addToCart(product)}
-              disabled={!product.inStock}
-              className="btn-base min-h-10 bg-[var(--ink)] px-3 text-sm text-white hover:bg-[var(--primary)] disabled:cursor-not-allowed disabled:bg-neutral-300"
+              onClick={() => {
+                if (product.priceRange) {
+                  const whatsappLink = generateWhatsAppLink(product.name, product.priceRange.min, product.priceRange.max);
+                  window.open(whatsappLink, '_blank');
+                }
+              }}
+              className="btn-base min-h-10 bg-[#25D366] px-3 text-sm text-white hover:bg-[#1ebd57] transition-colors flex items-center justify-center gap-2"
             >
-              {inCart ? <Check size={15} /> : <ShoppingCart size={15} />}
-              {inCart ? 'Added' : 'Add'}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-4.949 1.256l-.356.214-3.682-.966.984 3.595-.235.374a9.86 9.86 0 .246 4.876c.666 2.592 2.616 4.957 5.206 6.191.87.458 1.896.68 2.904.68a9.892 9.892 0 003.53-.658l.371-.214 3.746.966-.984-3.595.236-.374a9.86 9.86 0 00-.264-6.849 9.874 9.874 0 00-5.226-5.45zM23.12 0H.88C.39 0 0 .39 0 .88v22.24C0 23.61.39 24 .88 24h22.24c.49 0 .88-.39.88-.88V.88C24 .39 23.61 0 23.12 0Z"/></svg>
+              Negotiate
             </button>
           </div>
         </div>
