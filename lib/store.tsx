@@ -12,11 +12,11 @@ interface StoreContextType {
   cart: CartItem[];
   wishlist: Product[];
   addToCart: (product: Product) => void;
-  removeFromCart: (id: number) => void;
-  updateQuantity: (id: number, quantity: number) => void;
+  removeFromCart: (id: number | string) => void;
+  updateQuantity: (id: number | string, quantity: number) => void;
   toggleWishlist: (product: Product) => void;
-  isInWishlist: (id: number) => boolean;
-  isInCart: (id: number) => boolean;
+  isInWishlist: (id: number | string) => boolean;
+  isInCart: (id: number | string) => boolean;
   cartCount: number;
   cartTotal: number;
   clearCart: () => void;
@@ -86,12 +86,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: number | string) => {
     setCart(prev => prev.filter(item => item.id !== id));
     toast.success('Removed from cart', { icon: 'Remove', style: { borderRadius: '12px', fontFamily: 'Inter' } });
   };
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (id: number | string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(id);
       return;
@@ -113,8 +113,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     toast.success(existsInWishlist ? 'Removed from wishlist' : 'Added to wishlist', { icon: 'Heart', style: { borderRadius: '12px', fontFamily: 'Inter' } });
   };
 
-  const isInWishlist = (id: number) => wishlist.some(p => p.id === id);
-  const isInCart = (id: number) => cart.some(item => item.id === id);
+  const isInWishlist = (id: number | string) => wishlist.some(p => p.id === id);
+  const isInCart = (id: number | string) => cart.some(item => item.id === id);
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const cartTotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const clearCart = () => setCart([]);
