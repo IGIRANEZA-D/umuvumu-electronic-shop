@@ -19,7 +19,11 @@ const cats = [
   { id: 'kitchen', name: 'Kitchen Tech', icon: Utensils, count: '65', tone: 'from-slate-100 to-white' },
 ];
 
-export default function Categories() {
+interface CategoriesProps {
+  categories?: { id: string; name: string }[];
+}
+
+export default function Categories({ categories = cats }: CategoriesProps = {}) {
   return (
     <section className="relative overflow-hidden bg-[#fff7f1] py-16 sm:py-20 lg:py-28">
       <div className="absolute inset-0 opacity-[0.06] soft-grid-bg" />

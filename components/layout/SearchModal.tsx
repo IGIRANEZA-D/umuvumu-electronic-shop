@@ -5,15 +5,20 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Search, TrendingUp, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { products, formatPrice } from '@/lib/data';
+import { products as defaultProducts, formatPrice, Product } from '@/lib/data';
 import { useStore } from '@/lib/store';
 
 const quickTerms = ['iPhone 15', 'MacBook Pro', 'OLED TV', 'PS5 Slim', 'Headphones', 'Samsung'];
 
-export default function SearchModal() {
+interface SearchModalProps {
+  products?: Product[];
+}
+
+export default function SearchModal({ products: propsProducts }: SearchModalProps = {}) {
   const { isSearchOpen, setIsSearchOpen } = useStore();
   const [query, setQuery] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const products = propsProducts || defaultProducts;
 
   const results = query.length > 1
     ? products.filter(product =>

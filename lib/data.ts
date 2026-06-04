@@ -282,7 +282,14 @@ export const products: Product[] = [
     reviews: 321,
     badge: "New",
     description: "The most advanced Apple Watch with the S9 chip, Double Tap gesture, Always-On Retina display, and comprehensive health tracking features.",
-    specs: { "Chip": "S9 SiP", "Display": "Always-On Retina", "Water": "50m WR", "Health": "ECG + Blood O2", "Battery": "18 hours", "GPS": "L1 + L5" },
+    specs: [
+      { label: "Chip", value: "S9 SiP" },
+      { label: "Display", value: "Always-On Retina" },
+      { label: "Water", value: "50m WR" },
+      { label: "Health", value: "ECG + Blood O2" },
+      { label: "Battery", value: "18 hours" },
+      { label: "GPS", value: "L1 + L5" }
+    ],
     inStock: true,
     brand: "Apple",
     discountPercentage: calculateDiscount(479000, 529000),
@@ -300,7 +307,14 @@ export const products: Product[] = [
     reviews: 198,
     badge: "Sale",
     description: "Massive stereo sound with 100W output. IP67 waterproof, 15-hour playtime, and JBL PartyBoost to connect multiple speakers.",
-    specs: { "Power": "100W", "Battery": "15 hours", "Waterproof": "IP67", "Bluetooth": "5.1", "Ports": "USB-A charging", "Weight": "1.9kg" },
+    specs: [
+      { label: "Power", value: "100W" },
+      { label: "Battery", value: "15 hours" },
+      { label: "Waterproof", value: "IP67" },
+      { label: "Bluetooth", value: "5.1" },
+      { label: "Ports", value: "USB-A charging" },
+      { label: "Weight", value: "1.9kg" }
+    ],
     inStock: true,
     brand: "JBL",
     discountPercentage: calculateDiscount(349000, 399000),
@@ -317,7 +331,14 @@ export const products: Product[] = [
     reviews: 156,
     badge: "Hot",
     description: "The ultimate iPad experience with the M2 chip, Liquid Retina XDR display with ProMotion, and Apple Pencil hover capability.",
-    specs: { "Chip": "Apple M2", "Display": "12.9\" Liquid Retina XDR", "Storage": "256GB", "Camera": "12MP Wide + 10MP Ultra Wide", "Connectivity": "WiFi 6E", "Battery": "10 hours" },
+    specs: [
+      { label: "Chip", value: "Apple M2" },
+      { label: "Display", value: "12.9\" Liquid Retina XDR" },
+      { label: "Storage", value: "256GB" },
+      { label: "Camera", value: "12MP Wide + 10MP Ultra Wide" },
+      { label: "Connectivity", value: "WiFi 6E" },
+      { label: "Battery", value: "10 hours" }
+    ],
     inStock: true,
     brand: "Apple",
     priceRange: calculatePriceRange(1099000)
@@ -334,7 +355,14 @@ export const products: Product[] = [
     reviews: 89,
     badge: "New",
     description: "Co-engineered with Leica, the Xiaomi 13T Pro delivers professional photography with a 50MP main sensor and Xiaomi's Hyper Engine.",
-    specs: { "CPU": "Dimensity 9200+", "RAM": "12GB", "Storage": "256GB", "Camera": "50MP Leica", "Battery": "5000mAh", "Charge": "120W Turbo" },
+    specs: [
+      { label: "CPU", value: "Dimensity 9200+" },
+      { label: "RAM", value: "12GB" },
+      { label: "Storage", value: "256GB" },
+      { label: "Camera", value: "50MP Leica" },
+      { label: "Battery", value: "5000mAh" },
+      { label: "Charge", value: "120W Turbo" }
+    ],
     inStock: true,
     brand: "Xiaomi",
     discountPercentage: calculateDiscount(699000, 799000),
@@ -351,7 +379,14 @@ export const products: Product[] = [
     reviews: 76,
     badge: "Hot",
     description: "Dominate every game with RTX 4090 graphics, 240Hz display, and MUX Switch technology. The ultimate weapon for competitive gaming.",
-    specs: { "GPU": "RTX 4090 16GB", "CPU": "Intel i9-13950HX", "RAM": "32GB DDR5", "Display": "18\" QHD 240Hz", "Storage": "2TB SSD", "Battery": "90Whr" },
+    specs: [
+      { label: "GPU", value: "RTX 4090 16GB" },
+      { label: "CPU", value: "Intel i9-13950HX" },
+      { label: "RAM", value: "32GB DDR5" },
+      { label: "Display", value: "18\" QHD 240Hz" },
+      { label: "Storage", value: "2TB SSD" },
+      { label: "Battery", value: "90Whr" }
+    ],
     inStock: true,
     brand: "ASUS",
     priceRange: calculatePriceRange(2499000)
@@ -368,7 +403,14 @@ export const products: Product[] = [
     reviews: 134,
     badge: "Sale",
     description: "Sony's XR Cognitive Processor with OLED Contrast and XR OLED Motion Pro delivers the most lifelike picture quality ever seen.",
-    specs: { "Size": "55 inches", "Panel": "OLED", "Processor": "XR Cognitive", "HDR": "Dolby Vision + HDR10", "Sound": "XR Sound Pro", "OS": "Google TV" },
+    specs: [
+      { label: "Size", value: "55 inches" },
+      { label: "Panel", value: "OLED" },
+      { label: "Processor", value: "XR Cognitive" },
+      { label: "HDR", value: "Dolby Vision + HDR10" },
+      { label: "Sound", value: "XR Sound Pro" },
+      { label: "OS", value: "Google TV" }
+    ],
     inStock: true,
     brand: "Sony",
     discountPercentage: calculateDiscount(1299000, 1499000),
@@ -385,7 +427,14 @@ export const products: Product[] = [
     reviews: 88,
     badge: "Best Seller",
     description: "Cinematic sound from a single soundbar. Bose TrueSpace technology, Dolby Atmos, and Bose Spatial Headtracking for true 3D audio.",
-    specs: { "Channels": "13 drivers, 9-class amp", "Audio": "Dolby Atmos + DTS:X", "Connectivity": "HDMI eARC, WiFi, BT", "Size": "104.5cm", "Smart": "Voice assistant", "ADAPTiQ": "Yes" },
+    specs: [
+      { label: "Channels", value: "13 drivers, 9-class amp" },
+      { label: "Audio", value: "Dolby Atmos + DTS:X" },
+      { label: "Connectivity", value: "HDMI eARC, WiFi, BT" },
+      { label: "Size", value: "104.5cm" },
+      { label: "Smart", value: "Voice assistant" },
+      { label: "ADAPTiQ", value: "Yes" }
+    ],
     inStock: true,
     brand: "Bose",
     priceRange: calculatePriceRange(899000)
@@ -401,7 +450,14 @@ export const products: Product[] = [
     reviews: 43,
     badge: "New",
     description: "The flagship compact mirrorless with 45.7MP stacked CMOS sensor, 8K video, and Nikon's most advanced autofocus system.",
-    specs: { "Sensor": "45.7MP BSI Stacked CMOS", "ISO": "64–25600", "Video": "8K30p RAW", "AF Points": "493", "FPS": "20fps RAW", "Battery": "330 shots" },
+    specs: [
+      { label: "Sensor", value: "45.7MP BSI Stacked CMOS" },
+      { label: "ISO", value: "64–25600" },
+      { label: "Video", value: "8K30p RAW" },
+      { label: "AF Points", value: "493" },
+      { label: "FPS", value: "20fps RAW" },
+      { label: "Battery", value: "330 shots" }
+    ],
     inStock: true,
     brand: "Nikon",
     priceRange: calculatePriceRange(3499000)
@@ -417,7 +473,14 @@ export const products: Product[] = [
     reviews: 267,
     badge: "Hot",
     description: "The most powerful Xbox ever. True 4K gaming, 120fps, Xbox Game Pass, and Quick Resume let you jump between games instantly.",
-    specs: { "CPU": "8x Zen 2 3.8GHz", "GPU": "12 TFLOPS RDNA 2", "RAM": "16GB GDDR6", "Storage": "1TB NVMe SSD", "Optical": "4K UHD Blu-ray", "Resolution": "Up to 8K" },
+    specs: [
+      { label: "CPU", value: "8x Zen 2 3.8GHz" },
+      { label: "GPU", value: "12 TFLOPS RDNA 2" },
+      { label: "RAM", value: "16GB GDDR6" },
+      { label: "Storage", value: "1TB NVMe SSD" },
+      { label: "Optical", value: "4K UHD Blu-ray" },
+      { label: "Resolution", value: "Up to 8K" }
+    ],
     inStock: true,
     brand: "Microsoft",
     priceRange: calculatePriceRange(549000)
@@ -434,7 +497,14 @@ export const products: Product[] = [
     reviews: 112,
     badge: "Sale",
     description: "Incredible value with QLED quality. Far-field microphone, Google Assistant built-in, and a stunning bezel-free design.",
-    specs: { "Size": "75 inches", "Panel": "QLED", "Resolution": "4K UHD", "OS": "Google TV", "Refresh": "120Hz", "HDR": "Dolby Vision IQ" },
+    specs: [
+      { label: "Size", value: "75 inches" },
+      { label: "Panel", value: "QLED" },
+      { label: "Resolution", value: "4K UHD" },
+      { label: "OS", value: "Google TV" },
+      { label: "Refresh", value: "120Hz" },
+      { label: "HDR", value: "Dolby Vision IQ" }
+    ],
     inStock: true,
     brand: "Xiaomi",
     discountPercentage: calculateDiscount(1199000, 1399000),
@@ -451,7 +521,14 @@ export const products: Product[] = [
     reviews: 98,
     badge: "New",
     description: "Professional aerial photography under 249g. 4K/60fps HDR video, omnidirectional obstacle sensing, and up to 34-minute flight time.",
-    specs: { "Weight": "249g", "Video": "4K/60fps HDR", "Camera": "1/1.3\" CMOS", "Range": "20km", "Flight": "34 minutes", "Wind": "Level 6" },
+    specs: [
+      { label: "Weight", value: "249g" },
+      { label: "Video", value: "4K/60fps HDR" },
+      { label: "Camera", value: "1/1.3\" CMOS" },
+      { label: "Range", value: "20km" },
+      { label: "Flight", value: "34 minutes" },
+      { label: "Wind", value: "Level 6" }
+    ],
     inStock: true,
     brand: "DJI",
     priceRange: calculatePriceRange(899000)
@@ -468,7 +545,14 @@ export const products: Product[] = [
     reviews: 445,
     badge: "Best Seller",
     description: "The world's most compact 150W GaN charger. Charge a MacBook Pro, iPad, and two iPhones simultaneously with ActiveShield temperature management.",
-    specs: { "Power": "150W Total", "Ports": "4 (2 USB-C, 2 USB-A)", "Technology": "GaN II", "Safety": "ActiveShield", "Size": "Compact", "Input": "100-240V" },
+    specs: [
+      { label: "Power", value: "150W Total" },
+      { label: "Ports", value: "4 (2 USB-C, 2 USB-A)" },
+      { label: "Technology", value: "GaN II" },
+      { label: "Safety", value: "ActiveShield" },
+      { label: "Size", value: "Compact" },
+      { label: "Input", value: "100-240V" }
+    ],
     inStock: true,
     brand: "Anker",
     discountPercentage: calculateDiscount(89000, 109000),
@@ -486,7 +570,14 @@ export const products: Product[] = [
     reviews: 334,
     badge: "Sale",
     description: "Pocket-sized portable SSD with 1,050MB/s read speed, AES 256-bit encryption, and shock-resistant metal design for data protection anywhere.",
-    specs: { "Capacity": "2TB", "Read": "1,050MB/s", "Write": "1,000MB/s", "Interface": "USB 3.2 Gen 2", "Security": "AES 256-bit", "Shock": "1500G" },
+    specs: [
+      { label: "Capacity", value: "2TB" },
+      { label: "Read", value: "1,050MB/s" },
+      { label: "Write", value: "1,000MB/s" },
+      { label: "Interface", value: "USB 3.2 Gen 2" },
+      { label: "Security", value: "AES 256-bit" },
+      { label: "Shock", value: "1500G" }
+    ],
     inStock: true,
     brand: "Samsung",
     discountPercentage: calculateDiscount(179000, 219000),
@@ -527,7 +618,14 @@ export const products: Product[] = [
     reviews: 892,
     badge: "Best Seller",
     description: "The world's best-selling multi-cooker. Replaces 7 kitchen appliances — pressure cooker, slow cooker, rice cooker, steamer, sauté pan, yogurt maker, and warmer.",
-    specs: { "Functions": "7-in-1", "Capacity": "6 Quart", "Programs": "13 Smart", "Material": "Stainless Steel", "Power": "1200W", "Pressure": "15 PSI" },
+    specs: [
+      { label: "Functions", value: "7-in-1" },
+      { label: "Capacity", value: "6 Quart" },
+      { label: "Programs", value: "13 Smart" },
+      { label: "Material", value: "Stainless Steel" },
+      { label: "Power", value: "1200W" },
+      { label: "Pressure", value: "15 PSI" }
+    ],
     inStock: true,
     brand: "Instant Pot",
     discountPercentage: calculateDiscount(189000, 229000),
@@ -545,7 +643,14 @@ export const products: Product[] = [
     reviews: 234,
     badge: "Sale",
     description: "Your smart home control center with a 10\" display, built-in Nest camera, Face Match for personalized results, and brilliant sound.",
-    specs: { "Display": "10\" HD touchscreen", "Speaker": "Full-range + tweeter", "Camera": "6.5MP wide-angle", "Smart": "Google Home hub", "Privacy": "Physical camera switch", "Ambient EQ": "Yes" },
+    specs: [
+      { label: "Display", value: "10\" HD touchscreen" },
+      { label: "Speaker", value: "Full-range + tweeter" },
+      { label: "Camera", value: "6.5MP wide-angle" },
+      { label: "Smart", value: "Google Home hub" },
+      { label: "Privacy", value: "Physical camera switch" },
+      { label: "Ambient EQ", value: "Yes" }
+    ],
     inStock: true,
     brand: "Google",
     discountPercentage: calculateDiscount(229000, 279000),
@@ -562,7 +667,14 @@ export const products: Product[] = [
     reviews: 78,
     badge: "New",
     description: "The legendary SM7B reimagined with built-in preamp. Perfect for podcasting, streaming, and studio recording with zero background noise.",
-    specs: { "Type": "Dynamic cardioid", "Gain": "+28dB built-in preamp", "Response": "50Hz – 20kHz", "Connection": "XLR", "EQ": "High-pass + presence", "Weight": "1.11lbs" },
+    specs: [
+      { label: "Type", value: "Dynamic cardioid" },
+      { label: "Gain", value: "+28dB built-in preamp" },
+      { label: "Response", value: "50Hz – 20kHz" },
+      { label: "Connection", value: "XLR" },
+      { label: "EQ", value: "High-pass + presence" },
+      { label: "Weight", value: "1.11lbs" }
+    ],
     inStock: true,
     brand: "Shure",
     priceRange: calculatePriceRange(449000)

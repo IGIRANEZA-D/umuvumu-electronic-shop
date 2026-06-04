@@ -39,7 +39,11 @@ const announcements = [
   'Open 7 days / 8:00 AM - 9:00 PM / Chat anytime',
 ];
 
-export default function Navbar() {
+interface NavbarProps {
+  categories?: { name: string; id: string }[];
+}
+
+export default function Navbar({ categories = [] }: NavbarProps = {}) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);

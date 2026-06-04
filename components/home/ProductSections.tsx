@@ -87,7 +87,13 @@ const dealProds = products.filter(p => p.badge === 'Sale' || p.originalPrice).sl
 const featProds = products.filter(p => p.badge === 'Best Seller' || p.badge === 'Hot').slice(0, 8);
 const newProds = products.filter(p => p.badge === 'New').slice(0, 4);
 
-export function FeaturedProducts() {
+interface ProductSectionProps {
+  products?: typeof products;
+}
+
+export function FeaturedProducts({ products: propsProducts }: ProductSectionProps = {}) {
+  const productsToUse = propsProducts || products;
+  const featProds = productsToUse.filter(p => p.rating >= 4.5).slice(0, 4);
   return (
     <section className="bg-[var(--paper)] py-24">
       <div className="luxury-container">
@@ -103,7 +109,9 @@ export function FeaturedProducts() {
   );
 }
 
-export function FlashDeals() {
+export function FlashDeals({ products: propsProducts }: ProductSectionProps = {}) {
+  const productsToUse = propsProducts || products;
+  const dealProds = productsToUse.filter(p => p.badge === 'Sale').slice(0, 4);
   return (
     <section className="relative overflow-hidden bg-[var(--dark)] py-24">
       <div className="luxury-container relative">
@@ -122,7 +130,9 @@ export function FlashDeals() {
   );
 }
 
-export function NewArrivals() {
+export function NewArrivals({ products: propsProducts }: ProductSectionProps = {}) {
+  const productsToUse = propsProducts || products;
+  const newProds = productsToUse.filter(p => p.badge === 'New').slice(0, 4);
   return (
     <section className="bg-white py-24">
       <div className="luxury-container">
@@ -138,7 +148,8 @@ export function NewArrivals() {
   );
 }
 
-export function TrendingProducts() {
+export function TrendingProducts({ products: propsProducts }: ProductSectionProps = {}) {
+  const productsToUse = propsProducts || products;
   return (
     <section className="bg-[var(--paper)] py-24">
       <div className="luxury-container">
@@ -148,7 +159,7 @@ export function TrendingProducts() {
           title="What serious buyers are viewing now."
           copy="A focused selection of high-interest products from the UMUVUMU catalog."
         />
-        <ProductGrid items={products.slice(0, 8)} />
+        <ProductGrid items={productsToUse.slice(0, 8)} />
       </div>
     </section>
   );

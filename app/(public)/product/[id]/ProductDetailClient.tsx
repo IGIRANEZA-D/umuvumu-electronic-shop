@@ -187,11 +187,11 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           <div className="p-4 sm:p-8">
             {activeTab === 'specs' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {Object.entries(product.specs).map(([key, val]) => (
-                  <div key={key} className="flex flex-col gap-2 rounded-xl p-4 sm:flex-row sm:items-center sm:gap-4" style={{ background: '#F8F9FB' }}>
+                {product.specs?.map((spec, idx) => (
+                  <div key={idx} className="flex flex-col gap-2 rounded-xl p-4 sm:flex-row sm:items-center sm:gap-4" style={{ background: '#F8F9FB' }}>
                     <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: '#FF6701' }} />
-                    <span className="text-sm text-gray-500 font-medium w-28 flex-shrink-0" style={{ fontFamily: 'Inter' }}>{key}</span>
-                    <span className="text-sm font-semibold text-gray-800" style={{ fontFamily: 'Poppins' }}>{val}</span>
+                    <span className="text-sm text-gray-500 font-medium w-28 flex-shrink-0" style={{ fontFamily: 'Inter' }}>{spec.label}</span>
+                    <span className="text-sm font-semibold text-gray-800" style={{ fontFamily: 'Poppins' }}>{spec.value}</span>
                   </div>
                 ))}
               </div>
